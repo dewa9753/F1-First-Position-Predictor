@@ -28,7 +28,7 @@ def cv_hyperparameters(x_, y_):
 
     return grid_search.best_params_
 
-def train_model(x_, y_, params: dict = None):
+def train_model(x_, y_, paramsNone):
     if params is None:
         params = {
         'n_estimators': 100,
@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
     # split data, cross-validation, and train model
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=settings.TEST_SIZE, random_state=settings.RANDOM_STATE)
-    model = Classifier()
+    model = Classifier(RandomForestClassifier)
     
     if not os.path.exists(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib'):
         print("Tuning hyperparameters...")

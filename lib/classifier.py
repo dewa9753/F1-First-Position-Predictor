@@ -1,34 +1,49 @@
 from pandas import DataFrame
+from sklearn.model_selection import train_test_split
+
 from lib import settings
 
 class Classifier:
-    def __init__(self, model_type: type, hyper_params=None):
+    def __init__(self, model_type: type, default_hyper_params = None):
         assert(model_type is not None), "model_type must be provided"
         
         self.model_type = model_type
-        self.model = model_type()
-        self.hyper_params = hyper_params
+        self.hyper_params = default_hyper_params or {}
+        self.model = None
         self.train_x = None
+        self.test_x = None
         self.train_y = None
+        self.test_y = None
         
-    def tune_hyper_params(self, df: DataFrame):
+    def grid_search_hyper_params(self, param_grid = None):
         pass
     
-    def fit(self, df: DataFrame, y_col: str):
-        if self.hyper_params is None:
-            self.tune_hyper_params(df)
+    def fit(self, df: DataFrame, y_col: str, param_grid = None):
+        if param_grid is not None and isinstance(param_grid, dict):
+            self.grid_search_hyper_params(param_grid)
         
-        self.model = self.model_type(random_state=settings.RANDOM_STATE, **self.hyper_params)
+        self.model = self.model_type(**self.hyper_params)
         
-        assert(y_col in df.columns), f"{y_col} must be a column in given the dataframe"
+        # default to last column if specified column not found
+        if y_col not in df.columns:
+            y_col = df.columns[-1]
         
         self.train_x = df.drop(columns=[y_col])
         self.train_y = df[y_col]
         
+        self.train_x, self.test_x, self.train_y, self.test_y = train_test_split(
+            self.train_x, self.train_y,
+            test_size=settings.TEST_SIZE,
+            random_state=settings.RANDOM_STATE
+        )
+        
         self.model.fit(self.train_x, self.train_y)
     
-    def predict(self, X):
-        pass
+    def predict(self, x: DataFrame):
+        if self.model is None:
+            raise RuntimeError("Model has not been trained yet. Call fit() before predict().")
+        
+        return self.model.predict(x)
     
     def evaluate(self, df):
         pass
