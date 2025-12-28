@@ -6,7 +6,7 @@ DATA_ROOT = 'data'
 MODEL_ROOT = 'model'
 
 ## DATA SETTINGS
-MODEL_NAME = 'model_final_position'
+MODEL_NAME = 'model_rf_f1_winner'
 RANDOM_STATE = 7
 TEST_SIZE = 0.2
 CV_FOLD = 5
