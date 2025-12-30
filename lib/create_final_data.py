@@ -1,9 +1,10 @@
-from settings import DATA_ROOT
-import pandas as pd
-import sys
 import os
+import sys
+import pandas as pd
+from settings import DATA_ROOT
 
-form_data_path = lambda filename: f'{DATA_ROOT}/{filename}.csv'
+def form_data_path(filename):
+    return f'{DATA_ROOT}/{filename}.csv'
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and '--force-final' in sys.argv:
@@ -21,12 +22,15 @@ if __name__ == '__main__':
         # start with results_clean data
         final_df = dfs['results'].copy()
         final_df.rename(columns={'finalMilliseconds': 'finalTime'}, inplace=True)
+        
+        # remove rows with finalPosition <= 12 to keep more observations per class
+        final_df = final_df[final_df['finalPosition'] <= 12]
 
         # insert circuit id
         races_df = dfs['races']
         final_df = final_df.merge(races_df[['raceId', 'circuitId']], on='raceId', how='left')
-        final_df.drop(columns=['circuitId_y'], inplace=True)
-        final_df.rename(columns={'circuitId_x': 'circuitId'}, inplace=True)
+        #final_df.drop(columns=['circuitId_y'], inplace=True)
+        #final_df.rename(columns={'circuitId_x': 'circuitId'}, inplace=True)
 
         # insert q1,q2,q3 columns from qualifying data
         qualifying_times_df = dfs['qualifying']
@@ -59,6 +63,11 @@ if __name__ == '__main__':
         constructor_standings_df = dfs['constructor_standings']
         constructor_standings_df.rename(columns={'position': 'constructorPosition'}, inplace=True)
         final_df = final_df.merge(constructor_standings_df[['raceId', 'constructorId', 'constructorPosition']], on=['raceId', 'constructorId'], how='left')
+        
+        # change final position to binary podium or not
+        final_df['finalPosition'] = final_df['finalPosition'].apply(lambda x: 1 if x <= 3 else 0)
+        final_df['finalPosition'] = final_df['finalPosition'].astype('int64')
+        final_df.rename(columns={'finalPosition': 'podium'}, inplace=True)
 
         # clean final data
         # drop all columns that are known only after the races / are not useful for prediction

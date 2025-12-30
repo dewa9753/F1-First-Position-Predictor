@@ -27,9 +27,9 @@ if __name__ == '__main__':
     clf = Classifier(clf_type=GradientBoostingClassifier, default_hyper_params={
         'loss': 'log_loss',
         'n_estimators': 100,
-        'min_samples_split': 2,
-        'min_samples_leaf': 9,
-        'min_impurity_decrease': 0.4
+        'min_samples_split': 4,
+        'min_samples_leaf': 1,
+        'min_impurity_decrease': 0.2
         }
     )
     
@@ -40,12 +40,13 @@ if __name__ == '__main__':
         print("Training new model...")
         
         param_grid = {
+            'n_estimators': np.arange(100, 300, 50),
             'min_samples_split': np.arange(2, 5, 1),
             'min_samples_leaf': np.arange(1, 11, 2),
             'min_impurity_decrease': np.arange(0.0, 0.5, 0.1)
         }
         
-        clf.fit(df, y_col='finalPosition', param_grid=None)
+        clf.fit(df, y_col='podium', param_grid=None)
         clf.save(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib')
     
     # evaluate model
