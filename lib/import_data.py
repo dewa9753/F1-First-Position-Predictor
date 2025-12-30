@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
         try:
             shutil.move(path + '\\', './')
-            Path('104').rename(settings.ORIGINAL_DATA_ROOT)
+            Path('./111').rename(settings.ORIGINAL_DATA_ROOT)
             print(f"Successfully downloaded data to '{settings.ORIGINAL_DATA_ROOT}/'!")
         except Exception as e:
             print(f"Error moving downloaded data to '{settings.ORIGINAL_DATA_ROOT}/': {e}")

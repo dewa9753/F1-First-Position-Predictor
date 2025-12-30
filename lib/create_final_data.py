@@ -17,14 +17,16 @@ if __name__ == '__main__':
         for file in os.listdir(DATA_ROOT):
             key = file.replace('_clean.csv', '')
             dfs[key] = pd.read_csv(form_data_path(key + '_clean'))
-    
-        ## Calculate the final data features
+
+        # start with results_clean data
         final_df = dfs['results'].copy()
         final_df.rename(columns={'finalMilliseconds': 'finalTime'}, inplace=True)
 
-        # map circuitId to raceId
-        circuit_race_map = dfs['races'][['raceId', 'circuitId']]
-        final_df = final_df.merge(circuit_race_map, on='raceId', how='left')
+        # insert circuit id
+        races_df = dfs['races']
+        final_df = final_df.merge(races_df[['raceId', 'circuitId']], on='raceId', how='left')
+        final_df.drop(columns=['circuitId_y'], inplace=True)
+        final_df.rename(columns={'circuitId_x': 'circuitId'}, inplace=True)
 
         # insert q1,q2,q3 columns from qualifying data
         qualifying_times_df = dfs['qualifying']
@@ -40,7 +42,7 @@ if __name__ == '__main__':
 
         # add previous race numerical statistics
         final_df['prevFinalTime'] = final_df.groupby('driverId')['finalTime'].shift(1)
-        final_df['prevFinalTime'].fillna(final_df['prevFinalTime'].mean(), inplace=True)
+        final_df.fillna({'prevFinalTime': final_df['prevFinalTime'].mean()}, inplace=True)
         final_df['prevFinalTime'] = final_df['prevFinalTime'].astype('int64')
 
         results_df = dfs['results']
@@ -50,16 +52,16 @@ if __name__ == '__main__':
         final_df = final_df.merge(results_df[['raceId', 'driverId', 'prevFastestLapTime']], on=['raceId', 'driverId'], how='left')
 
         final_df['prevPoints'] = final_df.groupby('driverId')['points'].shift(1)
-        final_df['prevPoints'].fillna(final_df['prevPoints'].mean(), inplace=True)
+        final_df.fillna({'prevPoints': final_df['prevPoints'].mean()}, inplace=True)
         final_df['prevPoints'] = final_df['prevPoints'].astype('int64')
-
-
 
         # insert constructor standing
         constructor_standings_df = dfs['constructor_standings']
         constructor_standings_df.rename(columns={'position': 'constructorPosition'}, inplace=True)
         final_df = final_df.merge(constructor_standings_df[['raceId', 'constructorId', 'constructorPosition']], on=['raceId', 'constructorId'], how='left')
 
+        # clean final data
+        # drop all columns that are known only after the races / are not useful for prediction
         final_df.drop(columns=['totalLaps', 'raceId', 'points', 'finalTime', 'fastestLap', 'fastestLapTime', 'fastestLapSpeed', 'statusId'], inplace=True)
         final_df.sort_values(by=['driverId'], inplace=True)
         final_df.drop_duplicates(inplace=True)

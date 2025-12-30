@@ -64,7 +64,8 @@ if __name__ == '__main__':
     # circuitId is fairly correlated to other features than finalPosition, so this is unneeded
     # gridPosition is somewhat correlated to finalPosition
     # prevPoints is correlated to finalPosition but it is even more correlated to constructorPosition. So I will drop it.
-    print("Based on the EDA, selected features are: driverId, constructorId, constructorPosition, gridPosition, q3")
-    df = df[['driverId', 'constructorId', 'constructorPosition', 'gridPosition', 'q3', 'finalPosition']]
+    selected_features = ['driverId', 'constructorId', 'constructorPosition', 'gridPosition', 'q3', 'finalPosition', 'circuitId']
+    print("Based on the EDA, selected features are: ", selected_features)
+    df = df[selected_features]
     df.to_csv(f'{DATA_ROOT}/final_data.csv', index=False)
     print("Updated final_data.csv with only selected features.")
