@@ -35,8 +35,7 @@ if __name__ == '__main__':
     
     if not FORCE_TRAIN and os.path.exists(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib'):
         print("Loading existing model...")
-        clf.load(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib')
-        clf.load_data(df, y_col='finalPosition')
+        clf.load(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib', df)
     else:
         print("Training new model...")
         param_grid = {

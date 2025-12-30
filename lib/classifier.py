@@ -27,7 +27,7 @@ class Classifier:
         grid_search.fit(self.train_x, self.train_y)
         self.hyper_params = grid_search.best_params_
         
-    def load_data(self, df: DataFrame, y_col: str):
+    def __load_data(self, df: DataFrame, y_col: str):
         # default to last column if specified column not found
         if y_col not in df.columns:
             y_col = df.columns[-1]
@@ -42,7 +42,7 @@ class Classifier:
         )
     
     def fit(self, df: DataFrame, y_col: str, param_grid = None):
-        self.load_data(df, y_col)
+        self.__load_data(df, y_col)
         
         if self.model is None:
             if param_grid is not None and isinstance(param_grid, dict):
@@ -66,10 +66,11 @@ class Classifier:
         yhat = self.model.predict(self.test_x)
         return {"accuracy": accuracy_score(self.test_y, yhat), "f1": f1_score(self.test_y, yhat, average='weighted')}
     
-    def load(self, path):
+    def load(self, path, df: DataFrame):
         try:
             self.model = joblib.load(path)
             self.clf_type = type(self.model)
+            self.__load_data(df, y_col='finalPosition')
         except Exception as e:
             raise RuntimeError(f"Failed to load model from {path}: {str(e)}") from e
     
