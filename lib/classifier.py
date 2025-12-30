@@ -27,7 +27,7 @@ class Classifier:
         grid_search.fit(self.train_x, self.train_y)
         self.hyper_params = grid_search.best_params_
         
-    def __load_data(self, df: DataFrame, y_col: str):
+    def load_data(self, df: DataFrame, y_col: str):
         # default to last column if specified column not found
         if y_col not in df.columns:
             y_col = df.columns[-1]
@@ -42,7 +42,7 @@ class Classifier:
         )
     
     def fit(self, df: DataFrame, y_col: str, param_grid = None):
-        self.__load_data(df, y_col)
+        self.load_data(df, y_col)
         
         if self.model is None:
             if param_grid is not None and isinstance(param_grid, dict):

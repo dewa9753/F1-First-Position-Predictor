@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import GradientBoostingClassifier
 
 from lib import settings
 from lib.classifier import Classifier
@@ -23,21 +23,31 @@ if __name__ == '__main__':
     df = pd.read_csv(f'{settings.DATA_ROOT}/final_data.csv')
 
     # initialize classifier
-    clf = Classifier(clf_type=RandomForestClassifier)
+    # previously found hyperparameters through grid search
+    clf = Classifier(clf_type=GradientBoostingClassifier, default_hyper_params={
+        'loss': 'log_loss',
+        'n_estimators': 100,
+        'min_samples_split': 2,
+        'min_samples_leaf': 9,
+        'min_impurity_decrease': 0.4
+        }
+    )
     
     if not FORCE_TRAIN and os.path.exists(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib'):
         print("Loading existing model...")
         clf.load(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib')
-        clf.fit(df, y_col='finalPosition')
+        clf.load_data(df, y_col='finalPosition')
     else:
         print("Training new model...")
         param_grid = {
-            'n_estimators': np.arange(100, 500, 50),
-            'max_depth': np.arange(10, 100, 10),
+            'loss': ['log_loss', 'exponential'],
+            'n_estimators': np.arange(50, 300, 50),
             'min_samples_split': np.arange(2, 5, 1),
-            'min_samples_leaf': np.arange(1, 11, 2)
+            'min_samples_leaf': np.arange(1, 11, 2),
+            'min_impurity_decrease': np.arange(0.0, 0.5, 0.1)
         }
-        clf.fit(df, y_col='finalPosition', param_grid=param_grid)
+        #clf.fit(df, y_col='finalPosition', param_grid=param_grid)
+        clf.fit(df, y_col='finalPosition', param_grid=None)
         clf.save(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib')
     
     # evaluate model
