@@ -1,7 +1,7 @@
 [project]
 name = "Formula1-Podium-Classifier"
 version = "0.9.2"
-description = "Add your description here"
+description = "Binary classification project"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

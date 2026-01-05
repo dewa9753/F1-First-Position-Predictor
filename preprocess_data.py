@@ -1,3 +1,10 @@
+"""
+preprocess_data runs the full preprocessing pipeline to create the final dataset for training.
+
+Optional arguments:
+    --force-final : If provided, will re-create the final_data.csv even if it already exists. (lib.create_final_data)
+    --force-clean: If provided, will re-clean the data even if cleaned files already exist. (lib.clean_data)
+"""
 import subprocess
 import sys
 

@@ -1,3 +1,6 @@
+"""
+lib.import_data is used by preprocess_data.py to download the original dataset from Kaggle.
+"""
 import kagglehub
 import os
 import sys

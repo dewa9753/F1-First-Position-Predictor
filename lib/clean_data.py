@@ -1,3 +1,9 @@
+"""
+lib.clean_data is used by preprocess_data.py to clean the original dataset.
+
+Optional arguments:
+    --force-clean : If provided, will re-clean the data even if cleaned files already exist.
+"""
 import pandas as pd
 import numpy as np
 import os

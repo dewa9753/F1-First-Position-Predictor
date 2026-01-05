@@ -1,3 +1,10 @@
+"""
+EDA is used to perform exploratory data analysis on the final dataset.
+To be used after preprocess_data.py has been run to create final_data.csv.
+
+Optional arguments:
+    --show-plots : If provided, will display plots for EDA.
+"""
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd

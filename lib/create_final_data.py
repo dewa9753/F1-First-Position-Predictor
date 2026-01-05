@@ -1,3 +1,9 @@
+"""
+lib.create_final_data is used by preprocess_data.py to create the final dataset for training.
+
+Optional arguments:
+    --force-final : If provided, will re-create the final_data.csv even if it already exists.
+"""
 import os
 import sys
 import pandas as pd

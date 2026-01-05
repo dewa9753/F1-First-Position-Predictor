@@ -7,7 +7,7 @@ Before running this script, run the following commands:
     py preprocess_data.py --force-final
     py EDA.py
     
-This module takes one optional argument:
+Optional arguments:
     --force-train : If provided, forces retraining of the model even if a saved model already exists.
 
 Requires:
@@ -16,7 +16,6 @@ Requires:
 - numpy
 - pandas
 - scikit-learn
-
 - lib.{settings, classifier}
 """
 import sys
@@ -67,9 +66,9 @@ if __name__ == '__main__':
             'min_impurity_decrease': np.arange(0.0, 0.5, 0.1)
         }
         
-        # to disable grid search: set param_grid to None
-        #clf.fit(df, y_col='podium', param_grid=None)
-        clf.fit(df, y_col='podium', param_grid=param_grid)
+        # to enable grid search, uncomment the following line and comment out the line after it
+        clf.fit(df, y_col='podium', param_grid=None)
+        # clf.fit(df, y_col='podium', param_grid=param_grid)
         clf.save(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib')
     
     # evaluate model
