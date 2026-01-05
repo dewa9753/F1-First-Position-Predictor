@@ -15,10 +15,10 @@ Project code is being finalized. Then, the project will not be worked on any fur
 - Preprocessing: cleaned missing qualifying/finish values, engineered certain features like best previous lap times using the existing data.
 
 ## Quickstart
-Common commands:
-- py .\process_data.py --force-final
-- py .\EDA.py --show-plots
-- py .\train_test_model.py --force-train
+Common command chain:
+1. py .\process_data.py --force-final
+2. py .\EDA.py --show-plots
+3. py .\train_test_model.py --force-train
 
 ## Results & Analysis
 - Evaluation metrics: Accuracy and F1 score
