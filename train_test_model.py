@@ -1,3 +1,24 @@
+"""
+The main script of the project.
+It handles loading the data, training the model with hyperparameter tuning, saving/loading the model, and evaluating its performance.
+This script assumes: the data has been preprocessed with feature engineering and is stored in data/final_data.csv.
+
+Before running this script, run the following commands:
+    py preprocess_data.py --force-final
+    py EDA.py
+    
+This module takes one optional argument:
+    --force-train : If provided, forces retraining of the model even if a saved model already exists.
+
+Requires:
+- sys
+- os
+- numpy
+- pandas
+- scikit-learn
+
+- lib.{settings, classifier}
+"""
 import sys
 import os
 import numpy as np
@@ -9,7 +30,7 @@ from lib import settings
 from lib.classifier import Classifier
 
 if __name__ == '__main__':
-    FORCE_TRAIN: bool = False
+    force_train_flag: bool = False
     
     if len(sys.argv) > 1:
         if sys.argv[1] == '--force-train':
@@ -18,7 +39,7 @@ if __name__ == '__main__':
                 print("Forcing re-training of models...")
                 shutil.rmtree(settings.MODEL_ROOT)
                 print(f"Removed existing model directory '{settings.MODEL_ROOT}'.")
-            FORCE_TRAIN = True
+            force_train_flag = True
     # load data
     df = pd.read_csv(f'{settings.DATA_ROOT}/final_data.csv')
 
@@ -33,9 +54,9 @@ if __name__ == '__main__':
         }
     )
     
-    if not FORCE_TRAIN and os.path.exists(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib'):
+    if not force_train_flag and os.path.exists(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib'):
         print("Loading existing model...")
-        clf.load(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib', df)
+        clf.load(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib', 'podium', df)
     else:
         print("Training new model...")
         
@@ -46,9 +67,11 @@ if __name__ == '__main__':
             'min_impurity_decrease': np.arange(0.0, 0.5, 0.1)
         }
         
-        clf.fit(df, y_col='podium', param_grid=None)
+        # to disable grid search: set param_grid to None
+        #clf.fit(df, y_col='podium', param_grid=None)
+        clf.fit(df, y_col='podium', param_grid=param_grid)
         clf.save(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib')
     
     # evaluate model
-    results = clf.evaluate(df)
+    results = clf.evaluate()
     print(f"Model Performance: Accuracy = {results['accuracy']:.4f}, F1 Score = {results['f1']:.4f}")
