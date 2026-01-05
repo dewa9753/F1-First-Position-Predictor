@@ -1,6 +1,6 @@
 # F1 Podium Predictor (Gradient Boosting)
 
-Small project that predicts whether an F1 driver will finish on the podium (top 3) in a race using a gradient boosting classifier and race-related features (qualifying times, grid position, circuit, team/driver history).
+Small project that predicts whether an F1 driver will finish on the podium (top 3) in a race using a gradient boosting binary classifier and race-related features (qualifying times, grid position, circuit, team/driver history).
 
 ## Current Status
 Project code is being finalized. Then, the project will not be worked on any further.
