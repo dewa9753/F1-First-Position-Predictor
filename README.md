@@ -28,7 +28,7 @@ Common command chain:
 ## Further Development Ideas
 - Split chronologically by race/season to avoid leakage.
 - Use per-circuit embeddings or target encoding for circuit/driver to capture track effects.
-- Get more data from other datasets about circuit-specific characteristics
+- Get more data from other datasets containing specific characteristics of circuits/drivers
 
 ## License
 MIT
