@@ -29,6 +29,7 @@ from lib import settings
 from lib.classifier import Classifier
 
 if __name__ == '__main__':
+    # handle command-line arguments
     force_train_flag: bool = False
     
     if len(sys.argv) > 1:
@@ -39,6 +40,7 @@ if __name__ == '__main__':
                 shutil.rmtree(settings.MODEL_ROOT)
                 print(f"Removed existing model directory '{settings.MODEL_ROOT}'.")
             force_train_flag = True
+            
     # load data
     df = pd.read_csv(f'{settings.DATA_ROOT}/final_data.csv')
 
@@ -71,6 +73,6 @@ if __name__ == '__main__':
         # clf.fit(df, y_col='podium', param_grid=param_grid)
         clf.save(f'{settings.MODEL_ROOT}/{settings.MODEL_NAME}.joblib')
     
-    # evaluate model
+    # evaluate model and print results
     results = clf.evaluate()
     print(f"Model Performance: Accuracy = {results['accuracy']:.4f}, F1 Score = {results['f1']:.4f}")

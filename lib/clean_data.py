@@ -13,9 +13,9 @@ import settings
 
 ## functions
 def get_original_data(file_name):
-    df = pd.read_csv(f'{settings.ORIGINAL_DATA_ROOT}/{file_name}')
-    df.replace(to_replace=r'\N', value=np.nan, inplace=True)
-    return df
+    _df = pd.read_csv(f'{settings.ORIGINAL_DATA_ROOT}/{file_name}')
+    _df.replace(to_replace=r'\N', value=np.nan, inplace=True)
+    return _df
 
 def create_clean_data(df, columns_to_drop, output_file_name):
     df_cleaned = df.drop(columns_to_drop, axis=1)
