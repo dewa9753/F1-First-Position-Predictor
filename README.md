@@ -3,7 +3,7 @@
 Small project that predicts whether an F1 driver will finish on the podium (top 3) in a race using a gradient boosting binary classifier and race-related features (qualifying times, grid position, circuit, team/driver history).
 
 ## Current Status
-Project code is being finalized. Then, the project will not be worked on any further.
+Project code is finalized and won't be worked on any further.
 
 ## Key ideas
 - Problem: binary classification — podium (yes/no).
